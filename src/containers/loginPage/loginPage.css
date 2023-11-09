@@ -1,0 +1,15 @@
+form{
+    margin-top: 40px;
+    background-color: rgb(255, 213, 0);
+    width: 70%;
+    max-width: 500px;
+    align-items: center!important;
+    flex-direction: column!important;
+    display: flex!important;
+    border-radius: 20px;
+
+}
+
+form h1{
+
+}

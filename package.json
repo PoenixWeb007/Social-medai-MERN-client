@@ -6,7 +6,8 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.11.16",
-    "@mui/material": "^5.13.5",
+    "@mui/material": "^5.14.17",
+    "@mui/styled-engine-sc": "^6.0.0-alpha.5",
     "@reduxjs/toolkit": "^1.9.7",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -21,6 +22,7 @@
     "react-router-dom": "^6.13.0",
     "react-scripts": "5.0.1",
     "redux-persist": "^6.0.0",
+    "styled-components": "^6.1.1",
     "web-vitals": "^2.1.4",
     "yup": "^1.2.0"
   },

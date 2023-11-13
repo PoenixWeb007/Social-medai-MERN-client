@@ -5,7 +5,7 @@ import LoginPage from "./containers/loginPage";
 import ProfilePage from "./containers/profilPage";
 import Navbar from "./containers/navbar";
 import { Provider, useSelector } from "react-redux";
-import { ThemeProvider, createTheme } from "@mui/material";
+import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { themeSettings } from "./theme";
 import { FlexContainer } from "./components/FlexContainer.styled";
 import { store } from "./state/store";
@@ -17,10 +17,11 @@ function App() {
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
   const token = useSelector((state) => state.token);
   return (
-    <>
-      <Navbar />
+    <FlexContainer>
       <Provider store={store}>
         <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Navbar />
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<LoginPage />} />
@@ -36,7 +37,7 @@ function App() {
           </BrowserRouter>
         </ThemeProvider>
       </Provider>
-    </>
+    </FlexContainer>
   );
 }
 

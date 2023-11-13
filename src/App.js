@@ -4,10 +4,11 @@ import HomePage from "./containers/homePage";
 import LoginPage from "./containers/loginPage";
 import ProfilePage from "./containers/profilPage";
 import Navbar from "./containers/navbar";
-import { useSelector } from "react-redux";
+import { Provider, useSelector } from "react-redux";
 import { ThemeProvider, createTheme } from "@mui/material";
 import { themeSettings } from "./theme";
 import { FlexContainer } from "./components/FlexContainer.styled";
+import { store } from "./state/store";
 export const token = 1;
 export const websiteName = "Social Media";
 
@@ -18,21 +19,23 @@ function App() {
   return (
     <>
       <Navbar />
-      <ThemeProvider theme={theme}>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<LoginPage />} />
-            <Route
-              path="/home"
-              element={token ? <HomePage /> : <Navigate to="/" />}
-            />
-            <Route
-              path="/profile/:id"
-              element={token ? <ProfilePage /> : <Navigate to="/" />}
-            />
-          </Routes>
-        </BrowserRouter>
-      </ThemeProvider>
+      <Provider store={store}>
+        <ThemeProvider theme={theme}>
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<LoginPage />} />
+              <Route
+                path="/home"
+                element={token ? <HomePage /> : <Navigate to="/" />}
+              />
+              <Route
+                path="/profile/:id"
+                element={token ? <ProfilePage /> : <Navigate to="/" />}
+              />
+            </Routes>
+          </BrowserRouter>
+        </ThemeProvider>
+      </Provider>
     </>
   );
 }

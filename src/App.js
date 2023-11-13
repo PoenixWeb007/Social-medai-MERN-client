@@ -7,6 +7,7 @@ import Navbar from "./containers/navbar";
 import { useSelector } from "react-redux";
 import { ThemeProvider, createTheme } from "@mui/material";
 import { themeSettings } from "./theme";
+import { FlexContainer } from "./components/FlexContainer.styled";
 export const token = 1;
 export const websiteName = "Social Media";
 
@@ -14,9 +15,8 @@ function App() {
   const mode = useSelector((state) => state.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
   const token = useSelector((state) => state.token);
-  console.log(token);
   return (
-    <div className="App">
+    <>
       <Navbar />
       <ThemeProvider theme={theme}>
         <BrowserRouter>
@@ -33,7 +33,7 @@ function App() {
           </Routes>
         </BrowserRouter>
       </ThemeProvider>
-    </div>
+    </>
   );
 }
 

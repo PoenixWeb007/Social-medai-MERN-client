@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import { Formik } from "formik";
 import { loginSchema } from "../../schemas/AuthSchema";
-import { Alert, AlertTitle, TextField } from "@mui/material";
+import { Alert, AlertTitle, Button } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
 import LoginForm from "../../components/LoginForm.styled";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Field from "../../components/Field";
 import { useDispatch } from "react-redux";
 import { setLogin } from "../../state/reducerSlices/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage = () => {
   const [Error, setError] = useState(null);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const handleSubmit = (values, { setSubmitting, resetForm }) => {
     setSubmitting(true);
     fetch("http://localhost:4000/auth/login", {
@@ -26,8 +28,13 @@ const LoginPage = () => {
           setError(r.err);
         } else {
           dispatch(setLogin(r));
+          localStorage.setItem("user", JSON.stringify(r));
           setError(null);
+          navigate("/home");
         }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
       });
     resetForm();
     setSubmitting(false);
@@ -65,9 +72,21 @@ const LoginPage = () => {
             loading={formik.isSubmitting}
             loadingIndicator="Loading…"
             variant="contained"
+            sx={{ width: "50%", fontSize: "16px" }}
           >
             <span>Login</span>
           </LoadingButton>
+          <Button
+            variant="text"
+            sx={{
+              mt: 4,
+              fontSize: "16px",
+            }}
+            onClick={() => navigate("/register")}
+          >
+            Register
+          </Button>
+
           {Error && (
             <Alert severity="error" sx={{ m: 3, width: "100%" }}>
               <AlertTitle>Login Failed</AlertTitle>

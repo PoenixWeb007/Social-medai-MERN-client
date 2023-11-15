@@ -2,7 +2,7 @@ import React from "react";
 import styled from "@emotion/styled";
 import { Box } from "@mui/material";
 
-function LoginForm({ formik, children, onSubmit, wide = false }) {
+function AuthForm({ formik, children, onSubmit, wide = false }) {
   const style = {
     "& h1": {},
     "& form": {
@@ -36,4 +36,4 @@ function LoginForm({ formik, children, onSubmit, wide = false }) {
   );
 }
 
-export default LoginForm;
+export default AuthForm;

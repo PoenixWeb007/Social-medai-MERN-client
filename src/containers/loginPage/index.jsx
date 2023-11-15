@@ -3,13 +3,14 @@ import { Formik } from "formik";
 import { loginSchema } from "../../schemas/AuthSchema";
 import { Alert, AlertTitle, Button } from "@mui/material";
 import LoadingButton from "@mui/lab/LoadingButton";
-import LoginForm from "../../components/LoginForm.styled";
+import AuthForm from "../../components/AuthForm.styled";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Field from "../../components/Field";
 import { useDispatch } from "react-redux";
 import { setLogin } from "../../state/reducerSlices/userSlice";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../APIEndpoints";
+import SubmitButton from "../../components/SubmitButton";
 
 const loginPath = api.auth.login;
 
@@ -49,7 +50,7 @@ const LoginPage = () => {
       onSubmit={handleSubmit}
     >
       {(formik) => (
-        <LoginForm formik={formik} onSubmit={formik.handleSubmit}>
+        <AuthForm formik={formik} onSubmit={formik.handleSubmit}>
           <h1>Log In</h1>
           <AccountCircleIcon sx={{ fontSize: 140, color: "#f6f6f6" }} />
           <Field
@@ -67,18 +68,7 @@ const LoginPage = () => {
             name="password"
           />
 
-          <LoadingButton
-            type="submit"
-            disabled={!formik.isValid || !formik.dirty}
-            size="large"
-            onClick={formik.handleSubmit}
-            loading={formik.isSubmitting}
-            loadingIndicator="Loading…"
-            variant="contained"
-            sx={{ width: "50%", fontSize: "16px" }}
-          >
-            <span>Login</span>
-          </LoadingButton>
+          <SubmitButton formik={formik}>Login</SubmitButton>
           <Button
             variant="text"
             sx={{
@@ -96,7 +86,7 @@ const LoginPage = () => {
               {Error}
             </Alert>
           )}
-        </LoginForm>
+        </AuthForm>
       )}
     </Formik>
   );

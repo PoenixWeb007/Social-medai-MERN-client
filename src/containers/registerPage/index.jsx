@@ -1,22 +1,40 @@
-import { Formik } from "formik";
 import React, { useState } from "react";
-import LoginForm from "../../components/LoginForm.styled";
-import { registerSchema } from "../../schemas/AuthSchema";
-import Field from "../../components/Field";
+import { Formik } from "formik";
 import {
   Alert,
   AlertTitle,
   Box,
-  Button,
   Checkbox,
   FormControlLabel,
 } from "@mui/material";
+import AuthForm from "../../components/AuthForm.styled";
+import { registerSchema } from "../../schemas/AuthSchema";
+import Field from "../../components/Field";
 import PersonAddRoundedIcon from "@mui/icons-material/PersonAddRounded";
 import { Link, Navigate, json } from "react-router-dom";
-import { LoadingButton } from "@mui/lab";
 import { api } from "../../APIEndpoints";
+import SubmitButton from "../../components/SubmitButton";
 
 const registerPath = api.auth.register;
+const initialValues = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+  location: "",
+  occupation: "",
+  acceptedTerms: false,
+};
+const fields = [
+  { name: "firstName", label: "First name", type: "text" },
+  { name: "lastName", label: "Last name", type: "text" },
+  { name: "email", label: "Location", type: "text" },
+  { name: "location", label: "Location", type: "text" },
+  { name: "occupation", label: "Occupation", type: "text" },
+  { name: "password", label: "Password", type: "password" },
+  { name: "confirmPassword", label: "Confirm password", type: "password" },
+];
 let userName = "";
 
 const formattedFormData = ({
@@ -31,6 +49,30 @@ const formattedFormData = ({
 function RegisterPage() {
   const [Error, setError] = useState(false);
   const [isSucceeded, setIsSucceeded] = useState(false);
+  const handleSubmit = (values, { setSubmitting }) => {
+    const formattedValues = formattedFormData(values);
+
+    fetch(registerPath, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formattedValues),
+    })
+      .then((r) => r.json())
+      .then((r) => {
+        console.log(r);
+        if (r.error) {
+          setError(r.error);
+        } else {
+          userName = r.firstName;
+          setIsSucceeded(true);
+          setError(null);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+    setSubmitting(false);
+  };
 
   if (isSucceeded) {
     return (
@@ -57,48 +99,23 @@ function RegisterPage() {
 
   return (
     <Formik
-      initialValues={{
-        firstName: "",
-        lastName: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-        location: "",
-        occupation: "",
-        acceptedTerms: false,
-      }}
+      initialValues={initialValues}
       validationSchema={registerSchema}
-      onSubmit={(values, { setSubmitting }) => {
-        const formattedValues = formattedFormData(values);
-
-        fetch(registerPath, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formattedValues),
-        })
-          .then((r) => r.json())
-          .then((r) => {
-            console.log(r);
-            if (r.error) {
-              setError(r.error);
-            } else {
-              userName = r.firstName;
-              setIsSucceeded(true);
-              setError(null);
-            }
-          })
-          .catch((error) => {
-            console.error("Error fetching data:", error);
-          });
-        setSubmitting(false);
-      }}
+      onSubmit={handleSubmit}
     >
       {(formik) => (
-        <LoginForm formik={formik} onSubmit={formik.handleSubmit} wide={true}>
-          <Box>
+        <AuthForm formik={formik} onSubmit={formik.handleSubmit} wide={true}>
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
+          >
             <h1>Register</h1>
             <PersonAddRoundedIcon fontSize="large" />
           </Box>
+
           <Box
             sx={{
               display: "flex",
@@ -106,58 +123,18 @@ function RegisterPage() {
               justifyContent: "space-evenly",
             }}
           >
-            <Field
-              type="text"
-              id="outlined-error"
-              label="First name"
-              formik={formik}
-              name="firstName"
-            />
-            <Field
-              type="text"
-              id="outlined-error"
-              label="Last name"
-              formik={formik}
-              name="lastName"
-            />
-            <Field
-              type="email"
-              id="outlined-error"
-              label="Email"
-              formik={formik}
-              name="email"
-            />
-            <Field
-              type="text"
-              id="outlined-error"
-              label="Location"
-              formik={formik}
-              name="Location"
-            />
-            <Field
-              type="text"
-              id="outlined-error"
-              label="Occupation"
-              formik={formik}
-              name="occupation"
-            />
-            <Field
-              type="password"
-              id="outlined-error"
-              label="Password"
-              formik={formik}
-              name="password"
-            />
-            <Field
-              type="password"
-              id="outlined-error"
-              label="Confirm your password"
-              formik={formik}
-              name="confirmPassword"
-            />
+            {fields.map(({ name, type, label }) => (
+              <Field
+                type={type}
+                id="outlined-error"
+                label={label}
+                formik={formik}
+                name={name}
+              />
+            ))}
           </Box>
+
           <FormControlLabel
-            //sx={{ alignSelf: "start" }}
             control={
               <Checkbox
                 checked={formik.values.acceptedTerms}
@@ -169,18 +146,7 @@ function RegisterPage() {
             label="Accept Terms"
           />
 
-          <LoadingButton
-            type="submit"
-            disabled={!formik.isValid || !formik.dirty}
-            size="large"
-            onClick={formik.handleSubmit}
-            loading={formik.isSubmitting}
-            loadingIndicator="Loading…"
-            variant="contained"
-            md={{ width: "50%", fontSize: "16px" }}
-          >
-            <span>Create Account</span>
-          </LoadingButton>
+          <SubmitButton formik={formik}>Create Account</SubmitButton>
 
           {Error && (
             <Alert severity="error" sx={{ m: 3, width: "100%" }}>
@@ -188,7 +154,7 @@ function RegisterPage() {
               {Error}
             </Alert>
           )}
-        </LoginForm>
+        </AuthForm>
       )}
     </Formik>
   );

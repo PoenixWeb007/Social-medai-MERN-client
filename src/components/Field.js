@@ -6,7 +6,7 @@ function Field({ formik, id, label, type, name }) {
     <TextField
       error={formik.errors[name] && formik.touched[name]}
       type={type}
-      //id="outlined-error"
+      md={{ display: "inline" }}
       id={id}
       label={label}
       helperText={formik.touched[name] && formik.errors[name]}

@@ -9,6 +9,9 @@ import Field from "../../components/Field";
 import { useDispatch } from "react-redux";
 import { setLogin } from "../../state/reducerSlices/userSlice";
 import { useNavigate } from "react-router-dom";
+import { api } from "../../APIEndpoints";
+
+const loginPath = api.auth.login;
 
 const LoginPage = () => {
   const [Error, setError] = useState(null);
@@ -16,7 +19,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const handleSubmit = (values, { setSubmitting, resetForm }) => {
     setSubmitting(true);
-    fetch("http://localhost:4000/auth/login", {
+    fetch(loginPath, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(values),

@@ -2,7 +2,7 @@ import React from "react";
 import styled from "@emotion/styled";
 import { Box } from "@mui/material";
 
-function LoginForm({ formik, children, onSubmit }) {
+function LoginForm({ formik, children, onSubmit, wide = false }) {
   const style = {
     "& h1": {},
     "& form": {
@@ -12,7 +12,7 @@ function LoginForm({ formik, children, onSubmit }) {
       justifyContent: "center",
     },
     mt: 14,
-    width: "30%",
+    width: `${wide ? "50%" : "30%"}`,
     minWidth: "420px",
     //justifyContent: "center",
     padding: 4,

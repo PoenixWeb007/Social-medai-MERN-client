@@ -5,7 +5,6 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Avatar from "@mui/material/Avatar";
-import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { useDispatch } from "react-redux";
@@ -13,7 +12,11 @@ import { websiteName } from "../../App";
 import { setLogout } from "../../state/reducerSlices/userSlice";
 import { ThemeSwitch } from "../../components/themeSwitch";
 
-const pages = ["Home", "My profile", "My friends"];
+const pages = [
+  { label: "Home", path: "/home" },
+  { label: "My profile", path: "/profile/" },
+  { label: "My friends", path: "/friends/" },
+];
 const settings = ["Profile", "Logout"];
 
 function WhenLogin() {
@@ -28,6 +31,7 @@ function WhenLogin() {
   };
 
   const handleCloseNavMenu = () => {
+    // Navigate("/profile");
     setAnchorElNav(null);
   };
 
@@ -71,9 +75,17 @@ function WhenLogin() {
           }}
         >
           {pages.map((page) => (
-            <MenuItem key={page} onClick={handleCloseNavMenu}>
-              <Typography href="/home" textAlign="center">
-                {page}
+            <MenuItem key={page.label} onClick={handleCloseNavMenu}>
+              <Typography
+                component="a"
+                href={page.path}
+                textAlign="center"
+                sx={{
+                  textDecoration: "none",
+                  color: "black",
+                }}
+              >
+                {page.label}
               </Typography>
             </MenuItem>
           ))}
@@ -107,13 +119,21 @@ function WhenLogin() {
           {websiteName}
         </Typography>
         {pages.map((page) => (
-          <Button
-            key={page}
+          <Typography
+            component="a"
+            variant="h5"
+            href={page.path}
+            key={page.label}
             onClick={handleCloseNavMenu}
-            sx={{ my: 2, color: "white", display: "block" }}
+            sx={{
+              textDecoration: "none",
+              m: 1,
+              color: "white",
+              display: "block",
+            }}
           >
-            {page}
-          </Button>
+            {page.label}
+          </Typography>
         ))}
       </Box>
       <Typography

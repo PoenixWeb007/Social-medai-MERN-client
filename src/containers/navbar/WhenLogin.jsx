@@ -11,10 +11,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { websiteName } from "../../App";
 import { setLogout } from "../../state/reducerSlices/userSlice";
 import { ThemeSwitch } from "../../components/themeSwitch";
+import { stringAvatar } from "../../utilities/stringAvatar";
 
 const settings = ["Profile", "Logout"];
 
 function WhenLogin() {
+  const fullName = useSelector(
+    (state) => `${state.global.user.firstName} ${state.global.user.lastName}`
+  );
+  console.log(fullName);
   const id = useSelector((state) => state.global.user._id);
   const pages = [
     { label: "Home", path: "/home" },
@@ -109,10 +114,7 @@ function WhenLogin() {
             mr: 2,
             display: { xs: "none", md: "flex" },
             alignItems: "center",
-            //flexGrow: 1,
-            //fontFamily: "monospace",
             fontWeight: 700,
-            //letterSpacing: ".3rem",
             color: "inherit",
             textDecoration: "none",
           }}
@@ -125,7 +127,7 @@ function WhenLogin() {
             variant="h5"
             href={page.path}
             key={page.label}
-            //onClick={handleCloseNavMenu}
+            onClick={handleCloseNavMenu}
             sx={{
               textDecoration: "none",
               m: 1,
@@ -158,7 +160,7 @@ function WhenLogin() {
         <ThemeSwitch />
         <Tooltip title="Open settings">
           <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-            <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+            <Avatar {...stringAvatar(`${fullName.toUpperCase()}`)} />
           </IconButton>
         </Tooltip>
         <Menu

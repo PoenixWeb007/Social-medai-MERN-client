@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo } from "react";
-import { Box, CssBaseline, ThemeProvider, createTheme } from "@mui/material";
+import React, { useMemo } from "react";
+import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import { themeSettings } from "./theme";
@@ -17,23 +17,17 @@ export const websiteName = "Social Media";
 
 function App() {
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    const savedData = loadData("user");
-    if (savedData) {
-      dispatch(setLogin(savedData));
-    }
-    const savedMode = loadData("mode");
-    if (savedData) {
-      console.log(savedMode);
-      dispatch(setMode(savedMode));
-    }
-  }, []);
-
+  const savedData = loadData("user");
+  const savedMode = loadData("mode");
+  if (savedData) {
+    dispatch(setLogin(savedData));
+  }
+  if (savedMode) {
+    dispatch(setMode(savedMode));
+  }
   const mode = useSelector((state) => state.global.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
   const token = useSelector((state) => state.global.token);
-  console.log(theme);
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
@@ -59,7 +53,7 @@ function App() {
               />
               <Route
                 path="/profile/:id"
-                element={token ? <ProfilePage /> : <Navigate to="/" />}
+                element={token ? <ProfilePage /> : <Navigate to="/login" />}
               />
             </Routes>
           </BrowserRouter>

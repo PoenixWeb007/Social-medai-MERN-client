@@ -5,7 +5,6 @@ export function loadData(name) {
   if (savedData) {
     // Parse the JSON string back to an object
     const parsedData = JSON.parse(savedData);
-    console.log(parsedData);
 
     // Now 'parsedData' contains the data retrieved from local storage
     return parsedData;

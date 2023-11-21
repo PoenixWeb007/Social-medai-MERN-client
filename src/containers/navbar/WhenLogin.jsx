@@ -7,19 +7,20 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { websiteName } from "../../App";
 import { setLogout } from "../../state/reducerSlices/userSlice";
 import { ThemeSwitch } from "../../components/themeSwitch";
 
-const pages = [
-  { label: "Home", path: "/home" },
-  { label: "My profile", path: "/profile/" },
-  { label: "My friends", path: "/friends/" },
-];
 const settings = ["Profile", "Logout"];
 
 function WhenLogin() {
+  const id = useSelector((state) => state.global.user._id);
+  const pages = [
+    { label: "Home", path: "/home" },
+    { label: "My profile", path: `/profile/${id}` },
+    { label: "My friends", path: "/friends/" },
+  ];
   const dispatch = useDispatch();
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);

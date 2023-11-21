@@ -1,5 +1,5 @@
 import React, { useMemo } from "react";
-import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
+import { Box, CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Provider, useDispatch, useSelector } from "react-redux";
 import { themeSettings } from "./theme";
@@ -21,14 +21,15 @@ function App() {
   if (dataFromLocalStorage) {
     dispatch(setLogin(dataFromLocalStorage));
   }
-  const mode = useSelector((state) => state.mode);
+  const mode = useSelector((state) => state.global.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
   const token = useSelector((state) => state.global.token);
+  console.log(theme);
   return (
-    <FlexContainer>
-      <Provider store={store}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <FlexContainer>
           <Navbar />
           <BrowserRouter>
             <Routes>
@@ -53,9 +54,9 @@ function App() {
               />
             </Routes>
           </BrowserRouter>
-        </ThemeProvider>
-      </Provider>
-    </FlexContainer>
+        </FlexContainer>
+      </ThemeProvider>
+    </Provider>
   );
 }
 

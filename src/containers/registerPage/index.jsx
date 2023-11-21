@@ -6,16 +6,16 @@ import {
   Box,
   Checkbox,
   FormControlLabel,
+  Typography,
 } from "@mui/material";
 import AuthForm from "../../components/AuthForm.styled";
 import { registerSchema } from "../../schemas/AuthSchema";
 import Field from "../../components/Field";
 import PersonAddRoundedIcon from "@mui/icons-material/PersonAddRounded";
-import { Link, Navigate, json } from "react-router-dom";
-import { api } from "../../APIEndpoints";
+import { Link } from "react-router-dom";
 import SubmitButton from "../../components/SubmitButton";
+import { fetchRegister } from "../../utilities/fetchAuth";
 
-const registerPath = api.auth.register;
 const initialValues = {
   firstName: "",
   lastName: "",
@@ -29,13 +29,12 @@ const initialValues = {
 const fields = [
   { name: "firstName", label: "First name", type: "text" },
   { name: "lastName", label: "Last name", type: "text" },
-  { name: "email", label: "Location", type: "text" },
+  { name: "email", label: "Email", type: "text" },
   { name: "location", label: "Location", type: "text" },
   { name: "occupation", label: "Occupation", type: "text" },
   { name: "password", label: "Password", type: "password" },
   { name: "confirmPassword", label: "Confirm password", type: "password" },
 ];
-let userName = "";
 
 const formattedFormData = ({
   firstName,
@@ -47,31 +46,27 @@ const formattedFormData = ({
 }) => ({ firstName, lastName, email, password, location, occupation });
 
 function RegisterPage() {
-  const [Error, setError] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [error, setError] = useState(null);
   const [isSucceeded, setIsSucceeded] = useState(false);
-  const handleSubmit = (values, { setSubmitting }) => {
-    const formattedValues = formattedFormData(values);
 
-    fetch(registerPath, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(formattedValues),
-    })
-      .then((r) => r.json())
-      .then((r) => {
-        console.log(r);
-        if (r.error) {
-          setError(r.error);
-        } else {
-          userName = r.firstName;
-          setIsSucceeded(true);
-          setError(null);
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
-    setSubmitting(false);
+  const handleSubmit = async (values, { setSubmitting }) => {
+    try {
+      const formattedValues = formattedFormData(values);
+      const registeredUserName = await fetchRegister(
+        formattedValues,
+        setError,
+        setIsSucceeded
+      );
+      setUserName(registeredUserName);
+      console.log("User registered:", registeredUserName);
+    } catch (error) {
+      // Handle registration error
+      console.error("Registration error:", error);
+      setError(error);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (isSucceeded) {
@@ -88,7 +83,9 @@ function RegisterPage() {
       >
         <Alert severity="success">
           <AlertTitle>
-            <strong>Congratulations {userName}</strong>
+            <Typography variant="h4" fontWeight={500}>
+              Congratulations {userName}
+            </Typography>
           </AlertTitle>
           <p> You have successfully signed up. Welcome aboard! —</p>
           <Link to="/login"> Log in now</Link>
@@ -112,7 +109,19 @@ function RegisterPage() {
               alignItems: "center",
             }}
           >
-            <h1>Register</h1>
+            <Typography
+              variant="h1"
+              noWrap
+              href="/"
+              sx={{
+                mr: 2,
+                fontWeight: 500,
+                color: "inherit",
+                textDecoration: "none",
+              }}
+            >
+              Register
+            </Typography>
             <PersonAddRoundedIcon fontSize="large" />
           </Box>
 
@@ -148,10 +157,10 @@ function RegisterPage() {
 
           <SubmitButton formik={formik}>Create Account</SubmitButton>
 
-          {Error && (
+          {error && (
             <Alert severity="error" sx={{ m: 3, width: "100%" }}>
               <AlertTitle>Login Failed</AlertTitle>
-              {Error}
+              {error}
             </Alert>
           )}
         </AuthForm>

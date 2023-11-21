@@ -1,18 +1,14 @@
 import React, { useState } from "react";
 import { Formik } from "formik";
 import { loginSchema } from "../../schemas/AuthSchema";
-import { Alert, AlertTitle, Button } from "@mui/material";
-import LoadingButton from "@mui/lab/LoadingButton";
+import { Alert, AlertTitle, Button, Typography } from "@mui/material";
 import AuthForm from "../../components/AuthForm.styled";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import Field from "../../components/Field";
 import { useDispatch } from "react-redux";
-import { setLogin } from "../../state/reducerSlices/userSlice";
 import { useNavigate } from "react-router-dom";
-import { api } from "../../APIEndpoints";
 import SubmitButton from "../../components/SubmitButton";
-
-const loginPath = api.auth.login;
+import { fetchLogin } from "../../utilities/fetchAuth";
 
 const LoginPage = () => {
   const [Error, setError] = useState(null);
@@ -20,26 +16,7 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const handleSubmit = (values, { setSubmitting, resetForm }) => {
     setSubmitting(true);
-    fetch(loginPath, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(values),
-    })
-      .then((r) => r.json())
-      .then((r) => {
-        console.log(r);
-        if (r.err) {
-          setError(r.err);
-        } else {
-          dispatch(setLogin(r));
-          localStorage.setItem("user", JSON.stringify(r));
-          setError(null);
-          navigate("/home");
-        }
-      })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      });
+    fetchLogin(values, setError, dispatch);
     resetForm();
     setSubmitting(false);
   };
@@ -51,8 +28,20 @@ const LoginPage = () => {
     >
       {(formik) => (
         <AuthForm formik={formik} onSubmit={formik.handleSubmit}>
-          <h1>Log In</h1>
-          <AccountCircleIcon sx={{ fontSize: 140, color: "#f6f6f6" }} />
+          <Typography
+            variant="h1"
+            noWrap
+            href="/"
+            sx={{
+              mr: 2,
+              fontWeight: 500,
+              color: "inherit",
+              textDecoration: "none",
+            }}
+          >
+            Log In
+          </Typography>
+          <AccountCircleIcon sx={{ fontSize: 140, color: "neutral.main" }} />
           <Field
             type="email"
             id="outlined-error"
@@ -72,7 +61,7 @@ const LoginPage = () => {
           <Button
             variant="text"
             sx={{
-              mt: 4,
+              // mt: 4,
               fontSize: "16px",
             }}
             onClick={() => navigate("/register")}

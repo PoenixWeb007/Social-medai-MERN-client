@@ -53,7 +53,12 @@ const MaterialUISwitch = styled(Switch)(({ theme }) => ({
 export function ThemeSwitch(mode) {
   const dispatch = useDispatch();
   const theme = useTheme();
-  return (
-    <MaterialUISwitch theme={theme} onChange={() => dispatch(setMode())} />
-  );
+  const handleChange = () => {
+    dispatch(setMode());
+    localStorage.setItem(
+      "mode",
+      JSON.stringify(theme.palette.mode === "dark" ? "light" : "dark")
+    );
+  };
+  return <MaterialUISwitch theme={theme} onChange={handleChange} />;
 }

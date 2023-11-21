@@ -124,7 +124,7 @@ function WhenLogin() {
             variant="h5"
             href={page.path}
             key={page.label}
-            onClick={handleCloseNavMenu}
+            //onClick={handleCloseNavMenu}
             sx={{
               textDecoration: "none",
               m: 1,

@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { Box, CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Provider, useDispatch, useSelector } from "react-redux";
@@ -11,16 +11,25 @@ import LoginPage from "./containers/loginPage";
 import ProfilePage from "./containers/profilPage";
 import RegisterPage from "./containers/registerPage";
 import { loadData } from "./utilities/localStorage";
-import { setLogin } from "./state/reducerSlices/userSlice";
+import { setLogin, setMode } from "./state/reducerSlices/userSlice";
 
 export const websiteName = "Social Media";
 
 function App() {
   const dispatch = useDispatch();
-  const dataFromLocalStorage = loadData("user");
-  if (dataFromLocalStorage) {
-    dispatch(setLogin(dataFromLocalStorage));
-  }
+
+  useEffect(() => {
+    const savedData = loadData("user");
+    if (savedData) {
+      dispatch(setLogin(savedData));
+    }
+    const savedMode = loadData("mode");
+    if (savedData) {
+      console.log(savedMode);
+      dispatch(setMode(savedMode));
+    }
+  }, []);
+
   const mode = useSelector((state) => state.global.mode);
   const theme = useMemo(() => createTheme(themeSettings(mode)), [mode]);
   const token = useSelector((state) => state.global.token);

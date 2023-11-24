@@ -14,7 +14,7 @@ import Field from "../../components/Field";
 import PersonAddRoundedIcon from "@mui/icons-material/PersonAddRounded";
 import { Link } from "react-router-dom";
 import SubmitButton from "../../components/SubmitButton";
-import { fetchRegister } from "../../utilities/fetchAuth";
+import { fetchRegister } from "../../hooks/useAuth.js";
 
 const initialValues = {
   firstName: "",

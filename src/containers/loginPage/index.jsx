@@ -8,7 +8,7 @@ import Field from "../../components/Field";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import SubmitButton from "../../components/SubmitButton";
-import { fetchLogin } from "../../utilities/fetchAuth";
+import { fetchLogin } from "../../hooks/useAuth.js";
 
 const LoginPage = () => {
   const [Error, setError] = useState(null);

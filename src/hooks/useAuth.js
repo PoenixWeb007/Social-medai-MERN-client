@@ -1,10 +1,10 @@
 import { Navigate } from "react-router-dom";
-import { api } from "./APIEndpoints";
+import { APIEndPoints, api } from "../utilities/APIEndpoints";
 import { useDispatch } from "react-redux";
 import { setLogin } from "../state/reducerSlices/userSlice";
 
-const registerPath = api.auth.register;
-const loginPath = api.auth.login;
+const registerPath = APIEndPoints().auth.register;
+const loginPath = APIEndPoints().auth.login;
 
 export function fetchRegister({ values, setError, setIsSucceeded }) {
   return new Promise((resolve, reject) => {

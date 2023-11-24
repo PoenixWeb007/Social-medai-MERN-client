@@ -5,7 +5,7 @@ function SubmitButton({ formik, loadingIndicator = "loading...", children }) {
   return (
     <LoadingButton
       type="submit"
-      disabled={!formik.isValid || !formik.dirty}
+      c
       size="large"
       onClick={formik.handleSubmit}
       loading={formik.isSubmitting}

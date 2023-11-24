@@ -1,13 +1,14 @@
 export function loadData(name) {
   const savedData = localStorage.getItem(`${name}`);
 
-  // Check if data exists
   if (savedData) {
-    // Parse the JSON string back to an object
-    const parsedData = JSON.parse(savedData);
-
-    // Now 'parsedData' contains the data retrieved from local storage
-    return parsedData;
+    try {
+      const parsedData = JSON.parse(savedData);
+      return parsedData;
+    } catch (error) {
+      console.error("Error parsing JSON:", error);
+      return null;
+    }
   } else {
     console.log("No data found in local storage.");
     return null;

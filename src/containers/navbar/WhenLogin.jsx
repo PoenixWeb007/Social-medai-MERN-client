@@ -19,7 +19,6 @@ function WhenLogin() {
   const fullName = useSelector(
     (state) => `${state.global.user.firstName} ${state.global.user.lastName}`
   );
-  console.log(fullName);
   const id = useSelector((state) => state.global.user._id);
   const pages = [
     { label: "Home", path: "/home" },

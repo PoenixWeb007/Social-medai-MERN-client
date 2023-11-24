@@ -28,7 +28,7 @@ export const userSlice = createSlice({
       state.token = null;
     },
     setPosts: (state, action) => {
-      state.posts = action.payload.posts;
+      state.posts = action.payload;
     },
   },
 });

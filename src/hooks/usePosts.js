@@ -88,37 +88,38 @@ export function useAddComment(postId, userId, newComment) {
   return addComment;
 }
 
-export function useGetUsers(usersArray) {
+export function useWhoLikes(likes) {
   const [users, setUsers] = useState([]);
   const state = useSelector((state) => state.global);
+  const getUsersPath = APIEndPoints().users.getUsers;
+  const likesUsers = Object.keys(likes);
+
+  const getWhoLikes = async () => {
+    try {
+      const options = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer  ${state.token}`,
+        },
+        body: JSON.stringify(likesUsers),
+      };
+
+      const response = await fetch(getUsersPath, options);
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const users = await response.json();
+      setUsers(users);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   useEffect(() => {
-    const getUsersPath = APIEndPoints().users.getUsers;
-    const fetchData = async () => {
-      try {
-        const options = {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer  ${state.token}`,
-          },
-          body: JSON.stringify(usersArray),
-        };
-
-        const response = await fetch(getUsersPath, options);
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-
-        const users = await response.json();
-        setUsers(users);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    fetchData();
-  }, []);
+    getWhoLikes();
+  }, [likes]);
 
   return users;
 }

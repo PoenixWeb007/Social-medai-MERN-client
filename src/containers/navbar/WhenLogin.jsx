@@ -12,8 +12,8 @@ import { websiteName } from "../../App";
 import { setLogout } from "../../state/reducerSlices/userSlice";
 import { ThemeSwitch } from "../../components/themeSwitch";
 import { stringAvatar } from "../../utilities/stringAvatar";
-
-const settings = ["Profile", "Logout"];
+import { Divider, ListItemIcon } from "@mui/material";
+import { Logout, Settings } from "@mui/icons-material";
 
 function WhenLogin() {
   const fullName = useSelector(
@@ -40,12 +40,19 @@ function WhenLogin() {
     setAnchorElNav(null);
   };
 
-  const handleCloseUserMenu = (setting) => {
-    setAnchorElUser(null);
-    if (setting === "Logout") {
-      localStorage.removeItem("user");
-      dispatch(setLogout());
-    }
+  const handleLougOut = (setting) => {
+    setAnchorEl(null);
+    localStorage.removeItem("user");
+    dispatch(setLogout());
+  };
+
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
   };
   return (
     <>
@@ -157,35 +164,82 @@ function WhenLogin() {
 
       <Box sx={{ flexGrow: 0 }}>
         <ThemeSwitch />
-        <Tooltip title="Open settings">
-          <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-            <Avatar {...stringAvatar(`${fullName.toUpperCase()}`)} />
+
+        <Tooltip title="Account settings">
+          <IconButton
+            onClick={handleClick}
+            size="small"
+            sx={{ ml: 2 }}
+            aria-controls={open ? "account-menu" : undefined}
+            aria-haspopup="true"
+            aria-expanded={open ? "true" : undefined}
+          >
+            <Avatar
+              {...stringAvatar(`${fullName.toUpperCase()}`)}
+              sx={{
+                //bgcolor: `primary.dark`,
+                color: `neutral.dark`,
+                "& p": { fontSize: "24px", margin: 0 },
+              }}
+              aria-label="recipe"
+            />
           </IconButton>
         </Tooltip>
+
         <Menu
-          sx={{ mt: "45px" }}
-          id="menu-appbar"
-          anchorEl={anchorElUser}
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "right",
+          anchorEl={anchorEl}
+          id="account-menu"
+          open={open}
+          onClose={handleClose}
+          onClick={handleClose}
+          PaperProps={{
+            elevation: 0,
+            sx: {
+              overflow: "visible",
+              filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+              mt: 1.5,
+              minWidth: "190px",
+              "& .MuiAvatar-root": {
+                width: 32,
+                height: 32,
+                ml: -0.5,
+                mr: 1,
+              },
+              "&:before": {
+                content: '""',
+                display: "block",
+                position: "absolute",
+                top: 0,
+                right: 14,
+                width: 10,
+                height: 10,
+                bgcolor: "background.paper",
+                transform: "translateY(-50%) rotate(45deg)",
+                zIndex: 0,
+              },
+            },
           }}
-          keepMounted
-          transformOrigin={{
-            vertical: "top",
-            horizontal: "right",
-          }}
-          open={Boolean(anchorElUser)}
-          onClose={handleCloseUserMenu}
+          transformOrigin={{ horizontal: "right", vertical: "top" }}
+          anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
         >
-          {settings.map((setting) => (
-            <MenuItem
-              key={setting}
-              onClick={() => handleCloseUserMenu(setting)}
-            >
-              <Typography textAlign="center">{setting}</Typography>
-            </MenuItem>
-          ))}
+          <MenuItem onClick={() => {}}>
+            <Avatar /> Profile
+          </MenuItem>
+
+          <Divider />
+
+          <MenuItem onClick={() => {}}>
+            <ListItemIcon>
+              <Settings fontSize="small" />
+            </ListItemIcon>
+            Settings
+          </MenuItem>
+          <MenuItem onClick={handleLougOut}>
+            <ListItemIcon>
+              <Logout fontSize="small" />
+            </ListItemIcon>
+            Logout
+          </MenuItem>
         </Menu>
       </Box>
     </>

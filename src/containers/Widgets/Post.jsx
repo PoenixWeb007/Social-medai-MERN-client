@@ -27,12 +27,7 @@ import {
 } from "@mui/material";
 import ThumbUpOffAltIcon from "@mui/icons-material/ThumbUpOffAlt";
 import ThumbUpAltIcon from "@mui/icons-material/ThumbUpAlt";
-import {
-  useAddComment,
-  useFetchLike,
-  useGetUser,
-  useGetUsers,
-} from "../../hooks/usePosts";
+import { useAddComment, useFetchLike, useWhoLikes } from "../../hooks/usePosts";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -67,12 +62,14 @@ function Post({ fullName, createdAt, description, postId, likes, comments }) {
   const handleClose = () => setOpen(false);
   const date = new Date(createdAt).toDateString();
   const likesNum = Object.keys(likes).length;
-  const likesUsers = Object.keys(likes);
-  const getUsers = useGetUsers(likesUsers);
+
+  const users = useWhoLikes(likes);
+  useEffect(() => {
+    //getWhoLikes();
+  }, []);
   const handleOpen = () => {
     setOpen(true);
   };
-  console.log(likesUsers, getUsers);
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -148,7 +145,11 @@ function Post({ fullName, createdAt, description, postId, likes, comments }) {
             onClick={handleOpen}
             style={{ fontSize: "14px", padding: "4px" }}
           >
-            {`soufiane et ${likesNum - 1} autres personnes aiment ca`}
+            {users.length === 0
+              ? ""
+              : users.length === 1
+              ? `${users[0]?.firstName} liked this`
+              : `${users[0]?.firstName} and ${likesNum - 1} others liked this`}
           </span>
         </Link>
         <Modal
@@ -176,7 +177,7 @@ function Post({ fullName, createdAt, description, postId, likes, comments }) {
             {/* <Typography id="modal-modal-description" sx={{ mt: 2 }}>
               Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
             </Typography> */}
-            {getUsers.map((user, index) => {
+            {users.map((user, index) => {
               return (
                 <ListItem key={index}>
                   <ListItemAvatar>
